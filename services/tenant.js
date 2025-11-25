@@ -10,8 +10,16 @@ const addATenantService = async (
     dbConn,
     tenantData
 ) => {
-    const session = await dbConn.startSession();
-    session.startTransaction();
+    let session = null;
+    const supportsTransactions =
+        dbConn?.client?.s?.options?.replicaSet ||
+        dbConn?.client?.options?.replicaSet;
+
+    if (supportsTransactions) {
+        session = await dbConn.startSession();
+        session.startTransaction();
+    }
+
     try {
         const data = await addATenantRepo(
             dbConn,
@@ -40,12 +48,12 @@ const addATenantService = async (
                 {
                     _id: userData._id,
                     email: tenantData.email,
-                },
-                session
+                }
             );
 
-            await session.commitTransaction();
-            session.endSession();
+            if (session) {
+                await session.commitTransaction();
+            }
 
             setCacheConnection(data._id.toString(), tenantDbConnection);
         }
@@ -57,9 +65,14 @@ const addATenantService = async (
             responseObject: { tenantId: data._id, userId: userData?._id },
         };
     } catch (error) {
-        await session.abortTransaction();
-        session.endSession();
+        if (session) {
+            await session.abortTransaction();
+        }
         throw error;
+    } finally {
+        if (session) {
+            session.endSession();
+        }
     }
 };
 

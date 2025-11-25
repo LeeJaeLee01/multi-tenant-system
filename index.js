@@ -1,12 +1,12 @@
 import "dotenv/config";
-import ExpressConfig from "./server/express.config";
-import middlewareConfig from "./server/middleware.config";
-import routeConfig from "./server/route.config";
+import ExpressConfig from "./server/express.config.js";
+import middlewareConfig from "./server/middleware.config.js";
+import routeConfig from "./server/route.config.js";
 import { connectAllDb } from "./utils/connectionManager.js";
 
 const app = ExpressConfig();
 
-middlewareConfig(app);
+// middlewareConfig(app);
 routeConfig(app);
 
 const PORT = process.env.APP_PORT || 5000;

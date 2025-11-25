@@ -1,12 +1,10 @@
 import mongoose from "mongoose";
-import TenantSchema from "../schema/tenant";
-import TenantUserSchema from "../schema/tenantUser";
-import UsersSchema from "../schema/users";
+import TenantSchema from "../schema/tenant.js";
+import TenantUserSchema from "../schema/tenantUser.js";
+import UsersSchema from "../schema/users.js";
 
 const clientOption = {
     socketTimeoutMS: 30000,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
 };
 
 // Log MongoDB queries

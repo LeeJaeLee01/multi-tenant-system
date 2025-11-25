@@ -8,6 +8,16 @@ API documentation với các ví dụ cURL commands để test các endpoints.
 http://localhost:5000
 ```
 
+## Authentication & JWT Flow
+
+- Middleware `databaseResolver` yêu cầu mọi request (trừ `/api/login`) phải có header `jwt`.
+- Header này chứa access token lấy được từ bước login.
+- Nếu thiếu header, server trả lỗi `JsonWebTokenError: jwt must be provided`.
+- Demo luồng:
+  1. Tạo tenant mới → nhận `tenantId` & `userId`.
+  2. Gọi `/api/login` với `_id` (userId) và `tenantId` → nhận `accessToken`.
+  3. Gắn header `jwt: <accessToken>` cho mọi request tiếp theo (ví dụ health check, endpoints nội bộ).
+
 ## Endpoints
 
 ### 1. Tạo Tenant Mới
